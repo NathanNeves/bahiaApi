@@ -1,0 +1,1 @@
+SELECT A.descricao AS [Ativo],O.classe_negociacao AS [Negociacao],O.quantidade,O.data,SUM(O.quantidade) OVER (ORDER BY O.data rows unbounded preceding)   AS posicao FROM dbo.Ordem AS O INNER JOIN dbo.Ativo AS A ON O.fk_id_ativo = A.id_ativo ORDER BY O.data
