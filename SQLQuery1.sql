@@ -1,0 +1,1 @@
+SELECT COUNT(O.quantidade),FORMAT(O.data,'dd/MM/yyyy') AS data FROM dbo.Ordem AS O INNER JOIN dbo.Ativo AS A ON O.fk_id_ativo = A.id_ativo WHERE A.descricao  = 'Petr4' AND O.data <= '2019-09-27' GROUP BY O.data

@@ -8,6 +8,7 @@ using bahiaapi.Models;
 using bahiaapi.Validators;
 using FluentValidation;
 using FluentValidation.Results;
+using System.Globalization;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace bahiaapi.Controllers
@@ -22,7 +23,7 @@ namespace bahiaapi.Controllers
         /// <param name="ordem">Nome da Ordem</param>
         /// <returns>Retorna uma um statusCode com diferentes com um json</returns>
         [HttpPost]
-        public IActionResult RegistrarOrdem([FromBody] Models.Ordem ordem)
+        public IActionResult registrarOrdem([FromBody] Models.Ordem ordem)
         {   
             //Validador do request feito pelo usuário
             OrdemValidator validator = new OrdemValidator();
@@ -45,17 +46,17 @@ namespace bahiaapi.Controllers
 
                 return BadRequest(new { erro = "Ativo não encontrado" });
             }
-            //Caso encontre faz uma validação para se a quantidade solicitada bate com o lote mínimo
+            //Caso encontre, faz uma validação para se a quantidade solicitada bate com o lote mínimo
             if (!ordem.validarQuantidadeValor(ordem.quantidade, ativoResponse.quantidade)) {
 
                 return base.BadRequest(new { erro = "A quantidade mínima permitada para esse ativo é de " + ativoResponse.quantidade });
             }
-            //Caso seja verifica se é um multiplo do lote mínimo
+            //Caso seja maior que o lote mínimo, verifica se é um multiplo do lote mínimo
             if (!Models.Ordem.validarQuantidadeMultiplo(ordem.quantidade, ativoResponse.quantidade)) {
 
                 return base.BadRequest(new { erro = "A quantidade precisa ser múltipla de " + ativoResponse.quantidade });
             }
-            //atribui o id da ordem o valor do id do ativo resgato no banco de dados
+            //atribui o id da ordem o valor do id do ativo resgatado no banco de dados
             ordem.tratarOrdem(ativoResponse);
             //Tenta realizar um INSERT no banco de dados
             int insertResponse = sql.setOrdem(ordem);
@@ -76,13 +77,13 @@ namespace bahiaapi.Controllers
         /// <param name="ano">Ano em que as ordens foram efetuadas</param>
         /// <returns></returns>
         [HttpGet("{dia}/{mes}/{ano}")]
-        public IActionResult Get(int dia,int mes,int ano) {
+        public IActionResult Get(string dia,string mes,string ano) {
             //Variável  que constroe a string de data
-            string stringData = mes + "/"+dia+"/" + ano;
+            string stringData = dia + "/"+mes+"/" + ano;
             DateTime data;
             //Tenta transformar a string em data, caso não obtenha sucesso retorna um erro para o usuário
-            if (!DateTime.TryParse(stringData, out data)) {
-                return BadRequest(new { erro = "Data Invalida" });
+            if (!DateTime.TryParseExact(stringData,"dd/MM/yyyy",CultureInfo.InvariantCulture,DateTimeStyles.None, out data)) {
+                return BadRequest(new { erro = "Data Invalida, tente o formato DD/MM/YYYY" });
 
             }
             //Realiza a consulta no banco de dados
@@ -95,20 +96,7 @@ namespace bahiaapi.Controllers
             return Ok(list);
 
         }
-
-        /// <summary>
-        /// Função que seleciona todas as ordens feitas ordenadas por data
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult Get() {
-
-            List<Models.Ordem> list = sql.getOrdem();
-            if (list.Count == 0) {
-                return NotFound(new {erro = "Nenhum registro foi encontrado" });
-            }
-            return Ok(list);
-        }
+    
     }
         
         

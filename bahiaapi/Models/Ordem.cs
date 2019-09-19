@@ -27,8 +27,7 @@ namespace bahiaapi.Models
            //Se o tipo de negociacao for uma compra verifica se a quantidade inserida é maior que o lote mínimo
             if (this.negociacao == 'C')
             {
-                bool validacao = ((quantidadeInserida > loteMinimo)) ? true : false;
-                return validacao;
+                return (quantidadeInserida > loteMinimo);
             }
             //Caso o contrário retorna false
             return true;
@@ -43,8 +42,7 @@ namespace bahiaapi.Models
         /// <param name="loteMinimo">Quantidade necessária para efetuar uma ordem</param>
         /// <returns>Retorna um true se a quantidade inserida for multipla do lote mínimo</returns>
         public static bool validarQuantidadeMultiplo(int quantidadeInserida,int loteMinimo) {
-            bool validacao = (quantidadeInserida % loteMinimo == 0) ? true : false;
-            return validacao;
+            return (quantidadeInserida % loteMinimo == 0);
         }
 
         /// <summary>

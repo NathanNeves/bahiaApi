@@ -15,12 +15,9 @@ namespace bahiaapi.Validators
             RuleFor(x => x.quantidade).NotNull().WithMessage("O campo quantidade não pode ser nulo").NotEmpty().WithMessage("O campo quantidade não pode ser vazio").Must(quant=> quant!=0).WithMessage("quantidade não pode ser 0");
             RuleFor(x => x.data).NotNull().WithMessage("O campo data não pode ser nulo").NotEmpty().WithMessage("O campo data não pode ser vazio").Custom((data,context)=> {
                 DateTime valorData;
-                if (!DateTime.TryParse(data,out valorData))
+                if (!DateTime.TryParseExact(data,"dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None,out valorData))
                 {
                     context.AddFailure("O campo data precisa seguir a seguinte formatação DD/MM/AAAA");
-                }
-                else if (valorData > DateTime.Today) {
-                    context.AddFailure("O campo data precisa ser menor ou igual ao dia de hoje ");
                 }
             });
             RuleFor(x => x.negociacao).NotNull().WithMessage("O campo negociacao não pode ser nulo").NotEmpty().WithMessage("O campo negociacao não pode ser vazio").Custom((negociacao, context) =>
