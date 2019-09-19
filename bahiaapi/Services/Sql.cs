@@ -102,7 +102,7 @@ namespace bahiaapi.Services
                     //Conexao aberta
                     conn.Open();
                     //Query para selecionar todos os ativos em uma determinada data
-                    SqlCommand cmd = new SqlCommand("SELECT O.quantidade AS [quantidade],O.preco AS [preco],O.data AS [data], O.classe_negociacao AS [negociacao],A.descricao AS [Ativo],O.id_ordem FROM dbo.Ordem as O  INNER JOIN dbo.Ativo AS A ON O.fk_id_ativo = A.id_ativo WHERE O.data = @novadata  ORDER BY O.data", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT O.quantidade AS [quantidade],O.preco AS [preco],FORMAT(O.data,'dd/MM/yyyy') AS [data], O.classe_negociacao AS [negociacao],A.descricao AS [Ativo],O.id_ordem FROM dbo.Ordem as O  INNER JOIN dbo.Ativo AS A ON O.fk_id_ativo = A.id_ativo WHERE O.data = @novadata  ORDER BY O.data", conn);
                     cmd.Parameters.AddWithValue("@novadata", data);
                     SqlDataReader dataReader = cmd.ExecuteReader();
 
@@ -113,7 +113,7 @@ namespace bahiaapi.Services
                         Ordem ordem = new Ordem();
                         ordem.quantidade = Convert.ToInt32(dataReader.GetDouble(index++));
                         ordem.preco = dataReader.GetDouble(index++);
-                        ordem.data = Convert.ToString(dataReader.GetDateTime(index++)).Split(" ")[0];
+                        ordem.data = dataReader.GetString(index++);
                         ordem.negociacao = Convert.ToChar(dataReader.GetString(index++));
                         ordem.nomeAtivo = dataReader.GetString(index++);
                         ordem.id = dataReader.GetInt32(index++);
