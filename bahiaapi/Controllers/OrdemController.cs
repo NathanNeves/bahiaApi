@@ -56,7 +56,7 @@ namespace bahiaapi.Controllers
 
                 return base.BadRequest(new { erro = "A quantidade precisa ser múltipla de " + ativoResponse.quantidade });
             }
-            //atribui o id da ordem o valor do id do ativo resgatado no banco de dados
+            //Atribui o id da ordem ao valor do id do ativo resgatado no banco de dados
             ordem.tratarOrdem(ativoResponse);
             //Tenta realizar um INSERT no banco de dados
             int insertResponse = sql.setOrdem(ordem);
@@ -78,7 +78,7 @@ namespace bahiaapi.Controllers
         /// <returns></returns>
         [HttpGet("{dia}/{mes}/{ano}")]
         public IActionResult Get(string dia,string mes,string ano) {
-            //Variável  que constroe a string de data
+            //Variável  que constrói a string de data
             string stringData = dia + "/"+mes+"/" + ano;
             DateTime data;
             //Tenta transformar a string em data, caso não obtenha sucesso retorna um erro para o usuário

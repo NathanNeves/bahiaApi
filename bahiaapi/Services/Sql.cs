@@ -116,6 +116,7 @@ namespace bahiaapi.Services
                         ordem.data = Convert.ToString(dataReader.GetDateTime(index++)).Split(" ")[0];
                         ordem.negociacao = Convert.ToChar(dataReader.GetString(index++));
                         ordem.nomeAtivo = dataReader.GetString(index++);
+                        ordem.id = dataReader.GetInt32(index++);
                         listaOrdens.Add(ordem);
                     }
                     dataReader.Close();
